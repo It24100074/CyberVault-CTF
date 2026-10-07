@@ -1,0 +1,28 @@
+=== CyberVault CTF Health Check ===
+Docker: RUNNING
+
+[Containers]
+NAME           IMAGE           COMMAND                  SERVICE   CREATED         STATUS         PORTS
+ctfd-cache-1   redis:4         "docker-entrypoint.s…"   cache     2 minutes ago   Up 2 minutes   6379/tcp
+ctfd-ctfd-1    ctfd-ctfd       "/opt/CTFd/docker-en…"   ctfd      2 minutes ago   Up 2 minutes   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+ctfd-db-1      mariadb:10.11   "docker-entrypoint.s…"   db        2 minutes ago   Up 2 minutes   3306/tcp
+ctfd-nginx-1   nginx:stable    "/docker-entrypoint.…"   nginx     2 minutes ago   Up 2 minutes   0.0.0.0:80->80/tcp, [::]:80->80/tcp
+
+[Networks]
+NETWORK ID     NAME                DRIVER    SCOPE
+7f083f9d46ae   bridge              bridge    local
+d2493520d5f4   ctfd_default        bridge    local
+09c046b018c5   ctfd_internal       bridge    local
+1a21bcbf881a   host                host      local
+f9c2743712c3   nodegoat_default    bridge    local
+70067308a020   none                null      local
+f7b70f9ceb25   web-challenge_ctf   bridge    local
+
+[Resource Usage]
+CONTAINER ID   NAME                  CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
+63e000fcb6bc   ctfd-nginx-1          0.00%     5.355MiB / 7.606GiB   0.07%     1.54kB / 126B     8.42MB / 12.3kB   5
+d2c2e8c6685d   ctfd-ctfd-1           0.03%     118.5MiB / 7.606GiB   1.52%     360kB / 386kB     75.4MB / 0B       2
+a814a9600ab7   ctfd-db-1             0.04%     83.82MiB / 7.606GiB   1.08%     86.9kB / 94.6kB   27.9MB / 45.1kB   11
+04f8bff904a8   ctfd-cache-1          0.16%     3.227MiB / 7.606GiB   0.04%     154kB / 202kB     11.3MB / 0B       4
+c8574e9f4791   web-challenge-web-1   0.01%     18.47MiB / 7.606GiB   0.24%     25.6kB / 20kB     54.7MB / 4.1kB    7
+082e7219ac4f   web-challenge-db-1    0.04%     98.54MiB / 7.606GiB   1.27%     9.78kB / 8kB      61.3MB / 12.3kB   10
