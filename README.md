@@ -1,98 +1,232 @@
-# ![](https://github.com/CTFd/CTFd/blob/master/CTFd/themes/core/static/img/logo.png?raw=true)
+# CyberVault CTF
 
-![CTFd MySQL CI](https://github.com/CTFd/CTFd/workflows/CTFd%20MySQL%20CI/badge.svg?branch=master)
-![Linting](https://github.com/CTFd/CTFd/workflows/Linting/badge.svg?branch=master)
-[![MajorLeagueCyber Discourse](https://img.shields.io/discourse/status?server=https%3A%2F%2Fcommunity.majorleaguecyber.org%2F)](https://community.majorleaguecyber.org/)
-[![Documentation Status](https://api.netlify.com/api/v1/badges/6d10883a-77bb-45c1-a003-22ce1284190e/deploy-status)](https://docs.ctfd.io)
+CyberVault CTF is a six-stage penetration testing Play Box created for the IE3132 Penetration Testing module.
 
-## What is CTFd?
+The project uses CTFd as the main challenge and flag validation platform, Docker for platform services and web challenges, and a separate Ubuntu virtual machine for the final Linux privilege escalation stage.
 
-CTFd is a Capture The Flag framework focusing on ease of use and customizability. It comes with everything you need to run a CTF and it's easy to customize with plugins and themes.
+## Challenge Stages
 
-![CTFd is a CTF in a can.](https://github.com/CTFd/CTFd/blob/master/CTFd/themes/core/static/img/scoreboard.png?raw=true)
+1. OSINT
+2. Steganography
+3. Web / SQL Injection
+4. Cryptography
+5. Digital Forensics
+6. Linux Privilege Escalation
 
-## Features
+## Requirements
 
-- Create your own challenges, categories, hints, and flags from the Admin Interface
-  - Dynamic Scoring Challenges
-  - Unlockable challenge support
-  - Challenge plugin architecture to create your own custom challenges
-  - Static & Regex based flags
-    - Custom flag plugins
-  - Unlockable hints
-  - File uploads to the server or an Amazon S3-compatible backend
-  - Limit challenge attempts & hide challenges
-  - Automatic bruteforce protection
-- Individual and Team based competitions
-  - Have users play on their own or form teams to play together
-- Scoreboard with automatic tie resolution
-  - Hide Scores from the public
-  - Freeze Scores at a specific time
-- Scoregraphs comparing the top 10 teams and team progress graphs
-- Markdown content management system
-- SMTP + Mailgun email support
-  - Email confirmation support
-  - Forgot password support
-- Automatic competition starting and ending
-- Team management, hiding, and banning
-- Customize everything using the [plugin](https://docs.ctfd.io/docs/plugins/overview) and [theme](https://docs.ctfd.io/docs/themes/overview) interfaces
-- Importing and Exporting of CTF data for archival
-- And a lot more...
+- Windows 10/11
+- WSL 2
+- Ubuntu
+- Docker Desktop
+- Docker Compose
+- VirtualBox
+- Ubuntu Server VM for Stage 6
+- Git
 
-## Install
+## Setup
 
-The easiest way to get started is to use a [Hosted CTFd instance](https://ctfd.io/pricing/).
+Open WSL / Ubuntu:
 
-For self-hosted installations, check out the [CTFd docs](https://docs.ctfd.io/) for [deployment options](https://docs.ctfd.io/docs/deployment/installation) and the [Getting Started](https://docs.ctfd.io/tutorials/getting-started/) guide.
-
-Below is a summary of a few options for self-hosting CTFd:
-
-### Docker
-
-You can use Docker Compose with the following command from the source repository:
-
-`docker compose up`
-
-To use the auto-generated Docker images directly:
-
-`docker run -p 8000:8000 -it ctfd/ctfd`
-
-### Development
-
-1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and run `uv sync` to create a virtualenv with the dependencies installed.
-   - You can also install into an existing environment with `pip install -r requirements.txt`, which is generated from `uv.lock`.
-2. Modify [CTFd/config.ini](https://github.com/CTFd/CTFd/blob/master/CTFd/config.ini) to your liking.
-3. Use `uv run serve.py` or `uv run flask run` in a terminal to drop into debug mode.
-
-## Live Demo
-
-https://demo.ctfd.io/
-
-## Support
-
-To get basic support, you can join the [MajorLeagueCyber Community](https://community.majorleaguecyber.org/): [![MajorLeagueCyber Discourse](https://img.shields.io/discourse/status?server=https%3A%2F%2Fcommunity.majorleaguecyber.org%2F)](https://community.majorleaguecyber.org/)
-
-If you prefer commercial support or have a special project, feel free to [contact us](https://ctfd.io/contact/).
-
-## Managed Hosting
-
-Looking to use CTFd but don't want to deal with managing infrastructure? Check out [the CTFd website](https://ctfd.io/) for managed CTFd deployments.
-
-## MajorLeagueCyber
-
-CTFd is heavily integrated with [MajorLeagueCyber](https://majorleaguecyber.org/). MajorLeagueCyber (MLC) is a CTF stats tracker that provides event scheduling, team tracking, and single sign on for events.
-
-By registering your CTF event with MajorLeagueCyber users can automatically login, track their individual and team scores, submit writeups, and get notifications of important events.
-
-To integrate with MajorLeagueCyber, simply register an account, create an event, and install the client ID and client secret in the relevant portion in `CTFd/config.py` or in the admin panel:
-
-```python
-OAUTH_CLIENT_ID = None
-OAUTH_CLIENT_SECRET = None
+```bash
+cd ~/CTFd
 ```
 
-## Credits
+Make sure Docker Desktop is running.
 
-- Logo by [Laura Barbera](http://www.laurabb.com/)
-- Theme by [Christopher Thompson](https://github.com/breadchris)
-- Notification Sound by [Terrence Martin](https://soundcloud.com/tj-martin-composer)
+## Start the Platform
+
+```bash
+./scripts/member1/start_ctf.sh
+```
+
+Or:
+
+```bash
+docker compose up -d
+```
+
+## Access the Platform
+
+Open:
+
+```text
+http://localhost
+```
+
+or:
+
+```text
+http://localhost:8000
+```
+
+## Health Check
+
+```bash
+./scripts/member1/health_check.sh
+```
+
+## Stop the Platform
+
+```bash
+./scripts/member1/stop_ctf.sh
+```
+
+## Reset / Recovery
+
+```bash
+./scripts/member1/reset_ctf.sh
+```
+
+After reset:
+
+```bash
+./scripts/member1/health_check.sh
+```
+
+## Network and Services
+
+| Service | Port | Purpose |
+|---|---:|---|
+| Nginx | 80 | Reverse proxy / player access |
+| CTFd | 8000 | Main CTF platform |
+| MariaDB | 3306 | Internal database |
+| Redis | 6379 | Internal cache |
+
+Docker networks used:
+
+- `ctfd_default`
+- `ctfd_internal`
+- `web-challenge_ctf`
+
+## Member 1 Contribution
+
+Member 1 is responsible for:
+
+- CTF platform deployment
+- Docker and network architecture
+- Network isolation
+- Ports and services documentation
+- Reset / recovery mechanism
+- Platform health checking
+- Resource monitoring
+- Platform automation scripts
+
+## Member 1 Scripts
+
+```text
+scripts/member1/start_ctf.sh
+scripts/member1/stop_ctf.sh
+scripts/member1/reset_ctf.sh
+scripts/member1/health_check.sh
+```
+
+## Member 1 Documentation
+
+```text
+docs/member1/architecture.md
+docs/member1/deployment.md
+docs/member1/flag-validation.md
+docs/member1/resource-usage.md
+```
+
+## Member 1 Evidence
+
+```text
+evidence/member1/health-check.txt
+evidence/member1/health-check-after-reset.txt
+evidence/member1/reset-test.txt
+```
+
+## Project Structure
+
+```text
+CyberVault-CTF/
+├── README.md
+├── docker-compose.yml
+├── CTFd/
+├── challenges/
+├── docs/
+│   └── member1/
+├── evidence/
+│   └── member1/
+├── platform/
+│   ├── config/
+│   └── network/
+├── scripts/
+│   └── member1/
+└── vm/
+```
+
+## Useful Commands
+
+Start:
+
+```bash
+./scripts/member1/start_ctf.sh
+```
+
+Stop:
+
+```bash
+./scripts/member1/stop_ctf.sh
+```
+
+Reset:
+
+```bash
+./scripts/member1/reset_ctf.sh
+```
+
+Health check:
+
+```bash
+./scripts/member1/health_check.sh
+```
+
+Check containers:
+
+```bash
+docker compose ps
+```
+
+Check networks:
+
+```bash
+docker network ls
+```
+
+Check resource usage:
+
+```bash
+docker stats --no-stream
+```
+
+## Security Notice
+
+CyberVault CTF contains intentionally vulnerable components created for educational penetration testing activities.
+
+The environment must only be used in a controlled and authorized lab environment.
+
+## Upstream CTFd
+
+CyberVault CTF is built using the open-source CTFd framework.
+
+Official repository:
+
+```text
+https://github.com/CTFd/CTFd
+```
+
+Official documentation:
+
+```text
+https://docs.ctfd.io/
+```
+
+## IE3132 Penetration Testing
+
+**Project:** CyberVault CTF  
+**Module:** IE3132 - Penetration Testing  
+**Project Type:** CTF Play Box Implementation  
+**Platform:** CTFd + Docker + Ubuntu VM
