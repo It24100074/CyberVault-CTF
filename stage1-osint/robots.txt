@@ -1,0 +1,2 @@
+User-agent: * 
+Disallow: /internal/team_photo.jpg
